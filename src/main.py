@@ -1,5 +1,6 @@
 from entity_extractor import EntityExtractor
 from fastcoref import spacy_component
+import spacy
 
 # Opening the file
 with open("../data/small_sample.txt", "r") as file:
@@ -9,13 +10,23 @@ print(sample)
 
 ee = EntityExtractor()
 
-"""
-self.nlp.add_pipe("fastcoref")
-self.doc = self.nlp(text, component_cfg={"fastcoref": {'resolve_text': True}})
+ee.set_text(sample)
+print(ee.get_person())
+print(ee.get_verbs())
+
 relations = {}
 index = 0
-resolved_doc = self.nlp(self.doc._.resolved_text)
+
+nlp = spacy.load("en_core_web_trf")
+nlp.add_pipe("fastcoref")
+doc = nlp(sample, component_cfg={"fastcoref": {'resolve_text': True}})
+resolved_doc = nlp(doc._.resolved_text)
+
 for sent in resolved_doc.sents:
-    relations[index]["sent"], relations[index]["char"] = self.get_characters()
-    relations[index]
-"""
+    relations[index] = {}
+    ee.set_text(sent.text)
+    relations[index]["sent"], relations[index]["char"], relations[index][
+        "verbs"] = sent.text, ee.get_person(), ee.get_verbs()
+    index += 1
+
+print(relations)
