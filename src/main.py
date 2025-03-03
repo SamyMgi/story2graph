@@ -3,8 +3,8 @@ from fastcoref import spacy_component
 import spacy
 
 # Opening the file
-with open("../data/small_sample.txt", "r") as file:
-    sample = file.read().replace('"', "'")
+with open("../data/small_sample.txt", "r", encoding="utf-8") as file:
+    sample = file.read().replace('"', "'").replace("\n", " ")
 
 print(sample)
 
@@ -15,7 +15,8 @@ print(ee.get_person())
 print(ee.get_verbs())
 
 relations = {}
-index = 0
+sent_index = 0
+par_index = -1
 
 """
     1) Get a first dictionary : {index: {original_sent: ..., characters_detection_after_coref: ...}, ...}
@@ -29,15 +30,34 @@ resolved_doc = nlp(doc._.resolved_text)
 
 sent_list = list(doc.sents)
 
+previous_person = set()
+"""
+print("Base length :", len(sent_list))
+print("Resolved length :", len(list(resolved_doc.sents)))
+
+for i in range(len(sent_list)):
+    print(sent_list[i])
+    print(list(resolved_doc.sents)[i], "\n")
+"""
+
 for resolved_sent in resolved_doc.sents:
     ee.set_text(resolved_sent.text)
-    person = ee.get_person()
+    person = set(ee.get_person())
     if len(person) > 1:
-        relations[index] = {}
-        relations[index]["sent"], relations[index]["char"] = sent_list[index].text, ee.get_person()
-    index += 1
+        if person == previous_person:
+            relations[par_index]["sent"] += sent_list[sent_index].text
+        else:
+            par_index += 1
+
+            relations[par_index] = {}
+            relations[par_index]["sent"], relations[par_index]["char"] = sent_list[sent_index].text, ee.get_person()
+
+        print(relations[par_index])
+    sent_index += 1
+    previous_person = set(person)
 
 print(relations)
+
 
 """
     2) Optimizing dict by grouping indexes when consecutive sentences involve the same characters to reduce future computations.
