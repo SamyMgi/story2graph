@@ -2,6 +2,12 @@ from entity_extractor import EntityExtractor
 from fastcoref import spacy_component
 import spacy
 from transformers import pipeline
+import pandas as pd
+
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
+pd.set_option('display.max_colwidth', None)
 
 # Opening the file
 with open("../data/small_sample.txt", "r", encoding="utf-8") as file:
@@ -11,8 +17,7 @@ print(sample)
 
 ee = EntityExtractor()
 
-ee.set_text(sample)
-print(ee.get_person())
+#
 
 relations = {}
 sent_index = 0
@@ -29,6 +34,11 @@ nlp.add_pipe("fastcoref")
 doc = nlp(sample, component_cfg={"fastcoref": {'resolve_text': True}})
 resolved_doc = nlp(doc._.resolved_text)
 
+ee.set_text(doc._.resolved_text)
+
+characters = list(ee.get_person())
+print(characters)
+
 sent_list = list(doc.sents)
 
 previous_person = set()
@@ -43,7 +53,7 @@ for resolved_sent in resolved_doc.sents:
         else:
             par_index += 1
             relations[par_index] = {}
-            relations[par_index]["sent"], relations[par_index]["char"] = sent_list[sent_index].text, person
+            relations[par_index]["sent"], relations[par_index]["char"] = resolved_sent.text, list(person)
 
         # print(relations[par_index])
     sent_index += 1
@@ -55,19 +65,30 @@ print(relations)
     3) Parsing the dict and creating interaction matrix.
 """
 
-text = "Batman and Robin defeated the Joker."
+data = {char_1: {char_2: [] for char_2 in characters} for char_1 in characters}
+
+df = pd.DataFrame(data)
+
+print(df)
 
 relation_extraction = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
-output = relation_extraction(text, candidate_labels=["Friends", "Ambiguous", "Enemies"])
 
-chars = ["Batman", "Robin", "Joker"]
+for part in relations.values():
+    sent = part["sent"]
+    chars = part["char"]
+    pairs = [[chars[i], chars[j]] for i in range(len(chars)) for j in range(i + 1, len(chars))]
 
-pairs = [[chars[i], chars[j]] for i in range(len(chars)) for j in range(i + 1, len(chars))]
+    for cand in pairs:
+        cand_labels = [f"{cand[0]} and {cand[1]} are friends", f"{cand[0]} and {cand[1]} are enemies"]
+        output = relation_extraction(sent, candidate_labels=cand_labels)
+        # print(output)
+        relationship = 1 if "friends" in output["labels"][0] else -1
+        df[cand[0]][cand[1]].append(relationship)
+        df[cand[1]][cand[0]].append(relationship)
 
-for cand in pairs:
-    cand_labels = [f"{cand[0]} and {cand[1]} are friends", f"{cand[0]} and {cand[1]} are enemies"]
+df = df.applymap(lambda cell: 0 if len(cell) == 0 else sum(cell) / len(cell))
 
-output = relation_extraction(text, candidate_labels=cand_labels)
+print(df)
 
 """
     4) Regrouping all the previous steps (1-3) in one class file interaction_matrix.
