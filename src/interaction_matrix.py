@@ -12,8 +12,8 @@ class InteractionMatrix:
     def set_doc(self, doc):
         self.doc = doc
 
-    # Get dict associating groups of sentences to their implied character.
-    # Ex : "A was talking to B." -> ["A", "B"]
+    # Get dict associating groups of sentences to their involved character.
+    # Ex : {sentence -> "A was talking to B.", characters involved -> ["A", "B"]}
     def get_relation_dict(self):
         relations = {}
         sent_index = 0

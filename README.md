@@ -5,7 +5,7 @@ Turning **stories** into interactive **graphs** with characters as nodes and rel
 ## ✅ Current state :
 1. Detect characters and more -> **NER**
 2. Preprocessing -> **Coreference Resolution**
-3. Get each characters associated with each sentences (group of sentences for optimization)
+3. Get each characters associated to each sentences (group of sentences for optimization)
 
 ## 🎯 TO-DO :
 ### Main
@@ -13,6 +13,7 @@ Turning **stories** into interactive **graphs** with characters as nodes and rel
 - Convert the matrix into graph
 
 ### Secondary
+- Evaluation
 - Unit tests
 - Comments
 
