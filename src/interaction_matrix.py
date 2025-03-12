@@ -38,9 +38,13 @@ class InteractionMatrix:
 
         return relations
 
-    def get_interaction_matrix(self):
+    def get_interaction_matrix(self, relations):
+        data = {char_1: {char_2: [] for char_2 in self.entities} for char_1 in self.entities}
+
+        df = pd.DataFrame(data)
+
         relation_extraction = pipeline("zero-shot-classification", model=self.model)
-        """
+
         for part in relations.values():
             sent = part["sent"]
             chars = part["char"]
@@ -58,4 +62,4 @@ class InteractionMatrix:
     
         print(df)
 
-        """
+

@@ -3,7 +3,7 @@ from fastcoref import spacy_component
 import spacy
 from transformers import pipeline
 import pandas as pd
-from coref_resolution import CorefResolution
+#from coref_resolution import CorefResolution
 from interaction_matrix import InteractionMatrix
 
 pd.set_option('display.max_rows', None)
@@ -17,6 +17,18 @@ with open("../data/small_sample.txt", "r", encoding="utf-8") as file:
 
 print(sample)
 
+ee = EntityExtractor()
+ee.set_text(sample)
+print(ee.get_person())
+
+cr = CorefResolution()
+cr.set_text(sample)
+
+resolved_text = cr.get_resolved_doc()
+
+print(resolved_text)
+
+"""
 cr = CorefResolution()
 cr.set_text(sample)
 
@@ -29,3 +41,4 @@ for val in relation_dict.values():
     print(val)
 
 print(im.entities)
+"""
