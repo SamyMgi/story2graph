@@ -20,11 +20,11 @@ class InteractionMatrix:
         par_index = -1
         ee = EntityExtractor()
         previous_person = []
-
         for sent in self.doc.sents:
             ee.set_text(sent.text)
-            person = ee.get_person()
+            person = set(ee.get_person())
             self.entities = self.entities.union(person)
+
             if len(person) > 1:
                 if person == previous_person:
                     relations[par_index]["sent"] += sent[sent_index].text

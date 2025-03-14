@@ -12,8 +12,8 @@ class EntityExtractor:
 
     # Get Person entities from the text
     def get_person(self):
-        person = set([ent.text for ent in self.doc.ents if ent.label_ == "PERSON"])
-        return set(person)
+        person = [ent.text for ent in self.doc.ents if ent.label_ == "PERSON"]
+        return person
 
     # Get verbs from the text
     def get_verbs(self):

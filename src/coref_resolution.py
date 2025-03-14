@@ -1,11 +1,11 @@
 import spacy
 from fastcoref import spacy_component
 from entity_extractor import EntityExtractor
-
+import re
 
 class CorefResolution:
     def __init__(self, characters, model="en_core_web_trf"):
-        self.nlp = spacy.load(model)
+        self.nlp = spacy.load(model, exclude=["lemmatizer", "ner", "textcat"])
         self.nlp.add_pipe("fastcoref")
         self.characters = characters
         self.doc = None
@@ -21,19 +21,24 @@ class CorefResolution:
         improved_resolution = resolved_text
         improved_characters = set()
         clusters = self.doc._.coref_clusters
+        print("All characters :", self.characters)
         for cluster in clusters:
             names = [self.text[start:end] for start, end in cluster]
             print(names)
             set_names = set(names)
-            # print("All characters :", self.characters)
-            # print("All aliases :", set_names)
-            main_name = next((name for name in self.characters if name in set_names), None)
-            if main_name is not None:
-                improved_characters.add(main_name)
-                improved_resolution = improved_resolution.replace(names[0], main_name)
-            print("Name used by FCoref :", names[0])
-            print("Replaced by :", main_name)
+            print("All aliases :", set_names)
+            main_name = list({name for name in self.characters if name in names})
+            full_main_name = "_".join(main_name)
+            if main_name:
+                improved_characters.add(full_main_name)
+                improved_resolution = re.sub(rf"\b{re.escape(names[0])}\b", full_main_name, improved_resolution)
 
+                for alias in main_name:
+                    improved_resolution = re.sub(rf"\b{re.escape(alias)}\b", full_main_name, improved_resolution)
+
+                print("Name used by FCoref :", names[0])
+                print("Replaced by :", main_name, "->", full_main_name)
+            print("------------")
         self.characters = improved_characters
         print(self.characters)
         return improved_resolution
@@ -50,9 +55,14 @@ class CorefResolution:
 with open("../data/small_sample.txt", "r", encoding="utf-8") as file:
     sample = file.read().replace('"', "'").replace("\n", " ")
 
+ee = EntityExtractor()
+ee.set_text(sample)
+characters = ee.get_person()
+"""
 characters = ['Kevin Flynn', 'Flynn', 'Clu', 'Zuse', 'Rinzler', 'Kevin', 'Quorra', 'Alan', 'Alan Bradley', 'Tron',
               'Sam']
-
+"""
+print(characters)
 print("Original text :\n", sample)
 
 cr = CorefResolution(characters)
@@ -63,6 +73,3 @@ before_correction, after_correction = cr.get_resolved_text()
 print("\nBefore correction :\n", before_correction)
 print("\nAfter correction :\n", after_correction)
 
-ee = EntityExtractor()
-ee.set_text('Kevin Flynn, who was promoted to CEO of ENCOM International seven years earlier')
-print(ee.get_person())
