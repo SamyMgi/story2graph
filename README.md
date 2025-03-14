@@ -6,10 +6,11 @@ Turning **stories** into interactive **graphs** with characters as nodes and rel
 1. Detect characters and more -> **NER**
 2. Preprocessing -> **Coreference Resolution**
 3. Improving NER and CR with some tricks
-4. Get each characters associated to each sentences (group of sentences for optimization)
+4. Get each character associated to each sentence (group of sentences for optimization)
 
 ## 🎯 TO-DO :
 ### Main
+- Final improvement for NER (handle double characters identity)
 - Matrix of interactions
 
 ### Secondary
@@ -19,5 +20,4 @@ Turning **stories** into interactive **graphs** with characters as nodes and rel
 - Comments
 
 ## ⁉️ Thinking :
-- Handle double characters identity
 - Optimization
