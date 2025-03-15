@@ -30,7 +30,7 @@ resolved_characters = cr.characters
 print("Characters after processing :", resolved_characters)
 print("Text after processing :", resolved_text)
 
-im = InteractionMatrix(resolved_text)
+im = InteractionMatrix(resolved_text, resolved_characters)
 relation_dict = im.get_relation_dict()
 
 for val in relation_dict.values():

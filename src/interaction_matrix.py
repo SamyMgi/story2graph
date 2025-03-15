@@ -4,10 +4,10 @@ from entity_extractor import EntityExtractor
 
 
 class InteractionMatrix:
-    def __init__(self, doc, model="facebook/bart-large-mnli"):
+    def __init__(self, doc, entities, model="facebook/bart-large-mnli"):
         self.doc = doc
         self.model = model
-        self.entities = set()
+        self.entities = set(entities)
 
     def set_doc(self, doc):
         self.doc = doc
@@ -23,18 +23,28 @@ class InteractionMatrix:
         for sent in self.doc.sents:
             ee.set_text(sent.text)
             person = set(ee.get_person())
-            self.entities = self.entities.union(person)
+            improved_person = set()
+            for pers in person:
+                if pers not in self.entities:
+                    char = pers.split(" ")
+                    for split_char in char:
+                        if split_char in self.entities:
+                            improved_person.add(split_char)
+                else:
+                    improved_person.add(pers)
+
+            #self.entities = self.entities.union(person)
 
             if len(person) > 1:
-                if person == previous_person:
+                if improved_person == previous_person:
                     relations[par_index]["sent"] += sent[sent_index].text
                 else:
                     par_index += 1
                     relations[par_index] = {}
-                    relations[par_index]["sent"], relations[par_index]["char"] = sent.text, list(person)
+                    relations[par_index]["sent"], relations[par_index]["char"] = sent.text, list(improved_person)
 
             sent_index += 1
-            previous_person = set(person)
+            previous_person = improved_person
 
         return relations
 
