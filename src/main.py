@@ -30,7 +30,7 @@ resolved_characters = cr.characters
 print("Characters after processing :", resolved_characters)
 print("Text after processing :", resolved_text)
 
-im = InteractionMatrix(resolved_text, resolved_characters)
+im = InteractionMatrix(cr.doc, resolved_text, resolved_characters)
 relation_dict = im.get_relation_dict()
 
 for val in relation_dict.values():
@@ -38,6 +38,7 @@ for val in relation_dict.values():
 
 print(im.entities)
 
+im.get_interaction_matrix(relation_dict)
 """
 cr = CorefResolution()
 cr.set_text(sample)
