@@ -7,11 +7,11 @@ Turning **stories** into interactive **graphs** with characters as nodes and rel
 2. Preprocessing -> **Coreference Resolution**
 3. Improving NER and CR with some tricks
 4. Get each character associated to each sentence (group of sentences for optimization)
+5. **Matrix of interaction** between characters.
 
 ## 🎯 TO-DO :
 ### Main
-- Final improvement for NER (handle double characters identity)
-- Matrix of interactions
+- Modify original text with aliases when creating Matrix of Interaction
 
 ### Secondary
 - Convert the matrix into graph

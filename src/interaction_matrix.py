@@ -23,12 +23,28 @@ class InteractionMatrix:
         ee = EntityExtractor()
         previous_person = []
         original_sents = list(self.original_doc.sents)
+        resolved_sents = list(self.resolved_doc.sents)
+
+        print("///////////////////////////////////////")
+        print(len(original_sents), "sentences for the original.")
+        print(len(resolved_sents), "sentences for the resolved.")
+        print("/////////// BEFORE CORRECTION /////////////////")
+
+        original_sents = [sent.text for sent in original_sents if (sent.text and not sent.text.isspace())]
+        resolved_sents = [sent.text for sent in resolved_sents if (sent.text and not sent.text.isspace())]
+
+        print("/////////// AFTER CORRECTION /////////////////")
+        print(len(original_sents), "sentences for the original.")
+        print(len(resolved_sents), "sentences for the resolved.")
+        print("///////////////////////////////////////")
 
         print("\n-----INTERACTION MATRIX-----\n")
-        for sent in self.resolved_doc.sents:
-            print("Original ver:", original_sents[sent_index].text)
-            print("Resolved ver:", sent.text, "\n")
-            ee.set_text(sent.text)
+
+        # Need to check same length for both texts
+        for sent in resolved_sents:
+            print("Original ver:", original_sents[sent_index])
+            print("Resolved ver:", sent, "\n")
+            ee.set_text(sent)
             person = set(ee.get_person())
             improved_person = set()
             for pers in person:
@@ -44,11 +60,11 @@ class InteractionMatrix:
 
             if len(person) > 1:
                 if improved_person == previous_person:
-                    relations[par_index]["sent"] += original_sents[sent_index].text
+                    relations[par_index]["sent"] += original_sents[sent_index]
                 else:
                     par_index += 1
                     relations[par_index] = {}
-                    relations[par_index]["sent"], relations[par_index]["char"] = original_sents[sent_index].text, list(
+                    relations[par_index]["sent"], relations[par_index]["char"] = original_sents[sent_index], list(
                         improved_person)
 
             sent_index += 1
