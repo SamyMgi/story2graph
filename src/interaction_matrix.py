@@ -46,6 +46,7 @@ class InteractionMatrix:
             print("Resolved ver:", sent, "\n")
             ee.set_text(sent)
             person = set(ee.get_person())
+            print("Person on coref resolved :", person)
             improved_person = set()
             for pers in person:
                 if pers not in self.entities:

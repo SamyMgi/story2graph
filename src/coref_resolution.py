@@ -48,6 +48,12 @@ class CorefResolution:
             print("------------")
         self.characters = improved_characters
         print(self.characters)
+        print("HISTORY:", replacement_history)
+
+        for replacement in replacement_history:
+            self.text = re.sub(rf"\b{re.escape(replacement[0])}(?!\w)", replacement[1], self.text)
+
+        self.set_text(self.text)
         return improved_resolution
 
     # Get the nlp resolved object
