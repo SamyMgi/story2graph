@@ -1,6 +1,9 @@
+"""
+    Coreference Resolution using FCoref.
+    Improved using a first character list extracted via NER and rules.
+"""
+
 import spacy
-from fastcoref import spacy_component
-from entity_extractor import EntityExtractor
 import re
 
 
@@ -17,6 +20,7 @@ class CorefResolution:
         self.text = text
         self.doc = self.nlp(self.text, component_cfg={"fastcoref": {'resolve_text': True}})
 
+    # Improve the first coref resolution
     def _coref_correction(self):
         resolved_text = self.doc._.resolved_text
         improved_resolution = resolved_text
@@ -56,10 +60,10 @@ class CorefResolution:
         self.set_text(self.text)
         return improved_resolution
 
-    # Get the nlp resolved object
+    # Get the nlp improved resolution object
     def get_resolved_doc(self):
         return self.nlp(self._coref_correction())
 
-    # Get the str resolved object
+    # Get the str improved resolution object
     def get_resolved_text(self):
-        return self.doc._.resolved_text, self._coref_correction()
+        return self._coref_correction()

@@ -11,13 +11,15 @@ Turning **stories** into interactive **graphs** with characters as nodes and rel
 
 ## 🎯 TO-DO :
 ### Main
-- Modify original text with aliases when creating Matrix of Interaction
+- Integrate EntityExtractor to CorefResolution
+- Generate graph from Interaction Matrix
+- JSON export for Interaction Matrix
 
 ### Secondary
 - Convert the matrix into graph
 - Evaluation
-- Unit tests
 - Comments
 
 ## ⁉️ Thinking :
+- Multiple identity accuracy
 - Optimization

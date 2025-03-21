@@ -1,15 +1,21 @@
+"""
+    Returns an n x n Interaction Matrix (where n is the number of characters in the text).
+    Each pair has a value between -1 and +1, with -1 indicating a bad relationship and +1 a good one.
+"""
+
 import pandas as pd
 from transformers import pipeline
 from entity_extractor import EntityExtractor
 
 
 class InteractionMatrix:
-    def __init__(self, original_doc, resolved_doc, entities, model="facebook/bart-large-mnli"):
+    def __init__(self, original_doc, resolved_doc, characters, model="facebook/bart-large-mnli"):
         self.original_doc = original_doc
         self.resolved_doc = resolved_doc
         self.model = model
-        self.entities = set(entities)
+        self.characters = set(characters)
 
+    # Set doc to be used for the Interaction Matrix using the original one and its coref resolution.
     def set_doc(self, original_doc, resolved_doc):
         self.resolved_doc = resolved_doc
         self.original_doc = original_doc
@@ -49,15 +55,13 @@ class InteractionMatrix:
             print("Person on coref resolved :", person)
             improved_person = set()
             for pers in person:
-                if pers not in self.entities:
+                if pers not in self.characters:
                     char = pers.split(" ")
                     for split_char in char:
-                        if split_char in self.entities:
+                        if split_char in self.characters:
                             improved_person.add(split_char)
                 else:
                     improved_person.add(pers)
-
-            # self.entities = self.entities.union(person)
 
             if len(person) > 1:
                 if improved_person == previous_person:
@@ -73,8 +77,11 @@ class InteractionMatrix:
 
         return relations
 
+    # Get the Interaction Matrix.
+    # Ex: ["Character A", "Character B"] = Value between -1 and 1
+    # 1 (Good relationship) / -1 (Bad relationship)
     def get_interaction_matrix(self, relations):
-        data = {char_1: {char_2: [] for char_2 in self.entities} for char_1 in self.entities}
+        data = {char_1: {char_2: [] for char_2 in self.characters} for char_1 in self.characters}
 
         df = pd.DataFrame(data)
 
