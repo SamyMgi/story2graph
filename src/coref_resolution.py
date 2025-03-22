@@ -37,14 +37,16 @@ class CorefResolution:
             full_main_name = "_".join(main_name)
             coref_name = names[0]
             for replacement in replacement_history:
-                coref_name = re.sub(rf"\b{re.escape(replacement[0])}(?!\w)", replacement[1], coref_name)
+                coref_name = re.sub(rf"\b{re.escape(replacement[0])}\b(?!\w)", replacement[1], coref_name)
             if main_name:
+                #HERE
+                full_main_name = full_main_name.split("_")[0]
                 improved_characters.add(full_main_name)
-                improved_resolution = re.sub(rf"\b{re.escape(coref_name)}(?!\w)", full_main_name, improved_resolution)
+                improved_resolution = re.sub(rf"\b{re.escape(coref_name)}\b(?!\w)", full_main_name, improved_resolution)
                 replacement_history.append((coref_name, full_main_name))
                 for alias in main_name:
                     if alias != full_main_name:
-                        improved_resolution = re.sub(rf"\b{re.escape(alias)}(?!\w)", full_main_name,
+                        improved_resolution = re.sub(rf"\b{re.escape(alias)}\b(?!\w)", full_main_name,
                                                      improved_resolution)
                         replacement_history.append((alias, full_main_name))
                 print("Name used by FCoref :", names[0], "->", coref_name)
@@ -55,7 +57,7 @@ class CorefResolution:
         print("HISTORY:", replacement_history)
 
         for replacement in replacement_history:
-            self.text = re.sub(rf"\b{re.escape(replacement[0])}(?!\w)", replacement[1], self.text)
+            self.text = re.sub(rf"\b{re.escape(replacement[0])}\b(?!\w)", replacement[1], self.text)
 
         self.set_text(self.text)
         return improved_resolution

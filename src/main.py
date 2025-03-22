@@ -36,6 +36,6 @@ relation_dict = im.get_relation_dict()
 for val in relation_dict.values():
     print(val)
 
-print(im.entities)
+print(im.characters)
 
 im.get_interaction_matrix(relation_dict)

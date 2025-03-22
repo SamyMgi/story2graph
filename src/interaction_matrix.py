@@ -63,7 +63,7 @@ class InteractionMatrix:
                 else:
                     improved_person.add(pers)
 
-            if len(person) > 1:
+            if len(improved_person) > 1:
                 if improved_person == previous_person:
                     relations[par_index]["sent"] += original_sents[sent_index]
                 else:
@@ -103,6 +103,6 @@ class InteractionMatrix:
                 df[cand[1]][cand[0]].append(relationship)
                 print(cand_labels, " = ", relationship, "\n")
 
-        df = df.applymap(lambda cell: 0 if len(cell) == 0 else sum(cell) / len(cell))
+        df = df.apply(lambda column: column.map(lambda cell: None if len(cell) == 0 else cell[-1]))
 
         print(df)
