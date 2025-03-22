@@ -95,14 +95,23 @@ class InteractionMatrix:
             pairs = [[chars[i], chars[j]] for i in range(len(chars)) for j in range(i + 1, len(chars))]
 
             for cand in pairs:
-                cand_labels = [f"{cand[0]} and {cand[1]} are allies", f"{cand[0]} and {cand[1]} are enemies"]
+                cand_labels = [f"{cand[0]} and {cand[1]} are allies", f"{cand[0]} and {cand[1]} are enemies",
+                               "Undetermined"]
                 output = relation_extraction(sent, candidate_labels=cand_labels)
                 # print(output)
-                relationship = 1 if "allies" in output["labels"][0] else -1
-                df[cand[0]][cand[1]].append(relationship)
-                df[cand[1]][cand[0]].append(relationship)
-                print(cand_labels, " = ", relationship, "\n")
+                if "allies" in output["labels"][0]:
+                    relationship = 1
+                elif "enemies" in output["labels"][0]:
+                    relationship = -1
+                else:
+                    relationship = 0
+                # relationship = 1 if "allies" in output["labels"][0] else -1
+                score = relationship * output["scores"][0]
+                if score != 0:
+                    df[cand[0]][cand[1]].append(score)
+                    df[cand[1]][cand[0]].append(score)
+                print(cand_labels, " = ", score, "\n")
 
-        df = df.apply(lambda column: column.map(lambda cell: None if len(cell) == 0 else cell[-1]))
+        df = df.apply(lambda column: column.map(lambda cell: None if len(cell) == 0 else sum(cell) / len(cell)))
 
         print(df)
