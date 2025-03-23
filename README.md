@@ -8,15 +8,16 @@ Turning **stories** into interactive **graphs** with characters as nodes and rel
 3. Improving NER and CR with some tricks
 4. Get each character associated to each sentence (group of sentences for optimization)
 5. **Matrix of interaction** between characters.
+6. Matrix converted to **interactive Graph**
+7. Graph can be **saved** to .html
 
 ## 🎯 TO-DO :
 ### Main
 - Integrate EntityExtractor to CorefResolution
-- Generate graph from Interaction Matrix
+- Improve graph visualization
 - JSON export for Interaction Matrix
 
 ### Secondary
-- Convert the matrix into graph
 - Evaluation
 - Comments
 
