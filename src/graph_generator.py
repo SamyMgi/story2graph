@@ -5,6 +5,7 @@
 import numpy as np
 import pandas as pd
 import networkx as nx
+from pyvis.network import Network
 
 
 class GraphGenerator:
@@ -20,6 +21,7 @@ class GraphGenerator:
                 if char1 != char2:
                     if not pd.isna(self.im_df.loc[char1, char2]):
                         score = self.im_df.loc[char1, char2]
+                        # Simplifying the scores/weights
                         weight = 1 if score >= 0 else -1
                         G.add_edge(char1, char2, weight=weight)
 
@@ -28,9 +30,13 @@ class GraphGenerator:
         return G
 
     # Create and visualize the graph network
-    def visualize_graph(self):
-        self._create_graph()
-        pass
+    def generate_graph_viz(self, path):
+        G = self._create_graph()
+        nt = Network(height='100%', width='100%')
+        nt.from_nx(G)
+        path = path + ".html"
+        nt.save_graph(path)
+        print("Graph visualization saved at:", path)
 
     # Export the graph G into JSON
     def export_json(self):
@@ -46,4 +52,4 @@ data = {
 df = pd.DataFrame(data)
 
 gg = GraphGenerator(df)
-gg.visualize_graph()
+gg.generate_graph_viz("../data/test")
