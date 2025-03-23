@@ -2,7 +2,7 @@
     Returns an n x n Interaction Matrix (where n is the number of characters in the text).
     Each pair has a value between -1 and +1, with -1 indicating a bad relationship and +1 a good one.
 """
-
+import numpy as np
 import pandas as pd
 from transformers import pipeline
 from entity_extractor import EntityExtractor
@@ -95,8 +95,7 @@ class InteractionMatrix:
             pairs = [[chars[i], chars[j]] for i in range(len(chars)) for j in range(i + 1, len(chars))]
 
             for cand in pairs:
-                cand_labels = [f"{cand[0]} and {cand[1]} are allies", f"{cand[0]} and {cand[1]} are enemies",
-                               "Undetermined"]
+                cand_labels = [f"{cand[0]} and {cand[1]} are allies", f"{cand[0]} and {cand[1]} are enemies"]
                 output = relation_extraction(sent, candidate_labels=cand_labels)
                 # print(output)
                 if "allies" in output["labels"][0]:
@@ -106,12 +105,14 @@ class InteractionMatrix:
                 else:
                     relationship = 0
                 # relationship = 1 if "allies" in output["labels"][0] else -1
-                score = relationship * output["scores"][0]
+                # score = relationship * output["scores"][0]
+                score = relationship
                 if score != 0:
                     df[cand[0]][cand[1]].append(score)
                     df[cand[1]][cand[0]].append(score)
                 print(cand_labels, " = ", score, "\n")
 
-        df = df.apply(lambda column: column.map(lambda cell: None if len(cell) == 0 else sum(cell) / len(cell)))
+        df = df.apply(lambda column: column.map(lambda cell: np.nan if len(cell) == 0 else sum(cell) / len(cell)))
 
         print(df)
+        return df

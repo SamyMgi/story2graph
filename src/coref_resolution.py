@@ -5,6 +5,7 @@
 
 import spacy
 import re
+from fastcoref import spacy_component
 
 
 class CorefResolution:
@@ -41,6 +42,7 @@ class CorefResolution:
             if main_name:
                 #HERE
                 full_main_name = full_main_name.split("_")[0]
+                full_main_name = full_main_name.replace("-", "")
                 improved_characters.add(full_main_name)
                 improved_resolution = re.sub(rf"\b{re.escape(coref_name)}\b(?!\w)", full_main_name, improved_resolution)
                 replacement_history.append((coref_name, full_main_name))

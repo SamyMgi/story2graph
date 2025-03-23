@@ -33,7 +33,7 @@ class GraphGenerator:
     # Create and visualize the graph network
     def generate_graph_viz(self, path, colors_relationship=["blue", "red"], bgcolor="#FFFFFF", font_color="#000000"):
         G = self._create_graph(colors_relationship)
-        nt = Network(height="100%", width="100%", bgcolor=bgcolor, font_color=font_color)
+        nt = Network(height="800px", width="100%", bgcolor=bgcolor, font_color=font_color)
         nt.from_nx(G)
         path = path + ".html"
         nt.save_graph(path)
@@ -42,15 +42,3 @@ class GraphGenerator:
     # Export the graph G into JSON
     def export_json(self):
         pass
-
-
-data = {
-    "Kevin": {"Kevin": np.nan, "Sam": 0.8, "Clu": -1},
-    "Sam": {"Kevin": 0.8, "Sam": np.nan, "Clu": -0.5},
-    "Clu": {"Kevin": -1, "Sam": -0.5, "Clu": np.nan},
-}
-
-df = pd.DataFrame(data)
-
-gg = GraphGenerator(df)
-gg.generate_graph_viz("../data/test")
