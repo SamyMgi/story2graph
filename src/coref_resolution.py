@@ -42,7 +42,7 @@ class CorefResolution:
             if main_name:
                 #HERE
                 full_main_name = full_main_name.split("_")[0]
-                full_main_name = full_main_name.replace("-", "")
+                full_main_name = re.sub(r"[^a-zA-Zàâäéèêëîïôöùûüÿç0-9]", "", full_main_name)
                 improved_characters.add(full_main_name)
                 improved_resolution = re.sub(rf"\b{re.escape(coref_name)}\b(?!\w)", full_main_name, improved_resolution)
                 replacement_history.append((coref_name, full_main_name))
