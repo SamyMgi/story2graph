@@ -13,6 +13,7 @@ Turning **stories** into interactive **graphs** with characters as nodes and rel
 
 ## 🎯 TO-DO :
 ### Main
+- ! If only one quote
 - Integrate EntityExtractor to CorefResolution
 - Improve graph visualization
 - JSON export for Interaction Matrix
@@ -24,3 +25,26 @@ Turning **stories** into interactive **graphs** with characters as nodes and rel
 ## ⁉️ Thinking :
 - Multiple identity accuracy
 - Optimization
+
+---
+
+## How it works ?
+
+---
+
+## How to use it ?
+
+### Clone this repository
+```bash
+git clone https://github.com/SamyMgi/...
+```
+
+### Install the dependencies
+```bash
+pip install -r requirements.txt
+```
+### Example of usage
+
+```python
+  # Import the class
+```

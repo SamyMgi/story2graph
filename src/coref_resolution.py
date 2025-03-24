@@ -9,9 +9,14 @@ from fastcoref import spacy_component
 
 
 class CorefResolution:
-    def __init__(self, characters, model="en_core_web_trf"):
-        self.nlp = spacy.load(model, exclude=["lemmatizer", "ner", "textcat"])
-        self.nlp.add_pipe("fastcoref")
+    def __init__(self, characters, task="coref", model="en_core_web_trf"):
+        # Coref resolution needs less components when loading the model
+        if task == "coref":
+            self.nlp = spacy.load(model, exclude=["lemmatizer", "ner", "textcat"])
+            self.nlp.add_pipe("fastcoref")
+        # Simple load, mostly for NER
+        else:
+            self.nlp = spacy.load(model)
         self.characters = characters
         self.doc = None
         self.text = None
@@ -20,6 +25,12 @@ class CorefResolution:
     def set_text(self, text):
         self.text = text
         self.doc = self.nlp(self.text, component_cfg={"fastcoref": {'resolve_text': True}})
+
+    # NER to get entities considered as person for an input doc
+    def get_person(self, text):
+        ner_doc = self.nlp(text)
+        person = [ent.text for ent in ner_doc.ents if ent.label_ == "PERSON"]
+        return person
 
     # Improve the first coref resolution
     def _coref_correction(self):
@@ -40,7 +51,7 @@ class CorefResolution:
             for replacement in replacement_history:
                 coref_name = re.sub(rf"\b{re.escape(replacement[0])}\b(?!\w)", replacement[1], coref_name)
             if main_name:
-                #HERE
+                # HERE
                 full_main_name = full_main_name.split("_")[0]
                 full_main_name = re.sub(r"[^a-zA-Zàâäéèêëîïôöùûüÿç0-9]", "", full_main_name)
                 improved_characters.add(full_main_name)

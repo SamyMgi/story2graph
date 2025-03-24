@@ -29,14 +29,10 @@ print("Characters after processing :", resolved_characters)
 print("Text after processing :", resolved_text)
 
 im = InteractionMatrix(cr.doc, resolved_text, resolved_characters)
-relation_dict = im.get_relation_dict()
-
-for val in relation_dict.values():
-    print(val)
 
 print(im.characters)
 
-im_df = im.get_interaction_matrix(relation_dict)
+im_df = im.get_interaction_matrix()
 
 gg = GraphGenerator(im_df)
 

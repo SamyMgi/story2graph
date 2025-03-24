@@ -1,48 +1,47 @@
-"""
-    Returns an n x n Interaction Matrix (where n is the number of characters in the text).
-    Each pair has a value between -1 and +1, with -1 indicating a bad relationship and +1 a good one.
-"""
 import numpy as np
 import pandas as pd
 from transformers import pipeline
-from entity_extractor import EntityExtractor
+# from entity_extractor import EntityExtractor
+from coref_resolution import CorefResolution
 
 
 class InteractionMatrix:
     def __init__(self, original_doc, resolved_doc, characters, model="facebook/bart-large-mnli"):
+        """
+        Generate Interaction Matrix to analyze relationship between characters using Zero-Shot Learning.
+
+            original_doc (spacy.Doc): Original text.
+            resolved_doc (spacy.Doc): Coref Resolved text.
+            characters (list[str]): Characters list.
+            model (str): Model used for Zero-Shot Learning (BART by default).
+        """
         self.original_doc = original_doc
         self.resolved_doc = resolved_doc
         self.model = model
         self.characters = set(characters)
 
-    # Set doc to be used for the Interaction Matrix using the original one and its coref resolution.
-    def set_doc(self, original_doc, resolved_doc):
-        self.resolved_doc = resolved_doc
-        self.original_doc = original_doc
+    def _get_relation_dict(self):
+        """
+        Create a dictionary mapping each sentences to their involved characters.
 
-    # Get dict associating groups of sentences to their involved character.
-    # Ex : {sentence -> "A was talking to B.", characters involved -> ["A", "B"]}
-    def get_relation_dict(self):
+        Returns: A dictionary where each key is a sentence index (int), and the value
+                  is another dictionary containing:
+                  - "sentence" (str): The original sentence.
+                  - "characters" (list[str]): The characters involved in the sentence.
+                Ex : {0: {sentence -> "A was talking to B.", characters involved -> ["A", "B"]}, ...}
+
+        """
         relations = {}
         sent_index = 0
         par_index = -1
-        ee = EntityExtractor()
+        # CorefResolution only used for NER task
+        cr = CorefResolution([], task="NER")
         previous_person = []
         original_sents = list(self.original_doc.sents)
         resolved_sents = list(self.resolved_doc.sents)
 
-        print("///////////////////////////////////////")
-        print(len(original_sents), "sentences for the original.")
-        print(len(resolved_sents), "sentences for the resolved.")
-        print("/////////// BEFORE CORRECTION /////////////////")
-
         original_sents = [sent.text for sent in original_sents if (sent.text and not sent.text.isspace())]
         resolved_sents = [sent.text for sent in resolved_sents if (sent.text and not sent.text.isspace())]
-
-        print("/////////// AFTER CORRECTION /////////////////")
-        print(len(original_sents), "sentences for the original.")
-        print(len(resolved_sents), "sentences for the resolved.")
-        print("///////////////////////////////////////")
 
         print("\n-----INTERACTION MATRIX-----\n")
 
@@ -50,8 +49,7 @@ class InteractionMatrix:
         for sent in resolved_sents:
             print("Original ver:", original_sents[sent_index])
             print("Resolved ver:", sent, "\n")
-            ee.set_text(sent)
-            person = set(ee.get_person())
+            person = set(cr.get_person(sent))
             print("Person on coref resolved :", person)
             improved_person = set()
             for pers in person:
@@ -80,14 +78,25 @@ class InteractionMatrix:
     # Get the Interaction Matrix.
     # Ex: ["Character A", "Character B"] = Value between -1 and 1
     # 1 (Good relationship) / -1 (Bad relationship)
-    def get_interaction_matrix(self, relations):
+    def get_interaction_matrix(self):
+        """
+        Generates the Interaction Matrix using Zero-Shot Learning.
+        The matrix will have dimensions n x n, where n is the number of unique characters.
+        Each element quantifies the nature of the relationship between the corresponding characters,
+        with values between -1 and +1, indicating negative or positive relationships respectively.
+
+        Returns: A DataFrame (pd.DataFrame) where the rows and columns represent characters, and each cell
+                contains a score indicating the relationship between the characters.
+                Values range from -1 (bad relationship) to +1 (good relationship).
+        """
+        relation_dict = self._get_relation_dict()
         data = {char_1: {char_2: [] for char_2 in self.characters} for char_1 in self.characters}
 
         df = pd.DataFrame(data)
 
         relation_extraction = pipeline("zero-shot-classification", model=self.model)
 
-        for part in relations.values():
+        for part in relation_dict.values():
             sent = part["sent"]
             chars = part["char"]
             print("Sentence :", sent)
