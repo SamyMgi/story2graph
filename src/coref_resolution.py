@@ -1,8 +1,3 @@
-"""
-    Coreference Resolution using FCoref.
-    Improved using a first character list extracted via NER and rules.
-"""
-
 import spacy
 import re
 from fastcoref import spacy_component

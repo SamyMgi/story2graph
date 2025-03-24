@@ -1,8 +1,3 @@
-"""
-    Generate graph from the Interaction Matrix.
-"""
-
-import numpy as np
 import pandas as pd
 import networkx as nx
 from pyvis.network import Network

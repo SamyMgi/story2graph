@@ -1,4 +1,3 @@
-from entity_extractor import EntityExtractor
 import pandas as pd
 from coref_resolution import CorefResolution
 from interaction_matrix import InteractionMatrix

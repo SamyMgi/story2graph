@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from transformers import pipeline
-# from entity_extractor import EntityExtractor
 from coref_resolution import CorefResolution
 
 
