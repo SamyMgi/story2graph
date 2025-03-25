@@ -9,17 +9,12 @@ pd.set_option('display.width', None)
 pd.set_option('display.max_colwidth', None)
 
 # Opening the file
-with open("../data/sw3.txt", "r", encoding="utf-8") as file:
+with open("../data/cp_episode.txt", "r", encoding="utf-8") as file:
     sample = file.read().replace('"', "'").replace("\n", " ")
 
 print(sample)
 
-ee = EntityExtractor()
-ee.set_text(sample)
-characters = ee.get_person()
-
-cr = CorefResolution(characters)
-cr.set_text(sample)
+cr = CorefResolution(sample)
 
 resolved_text = cr.get_resolved_doc()
 resolved_characters = cr.characters
