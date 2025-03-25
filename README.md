@@ -13,17 +13,14 @@ Turning **stories** into interactive **graphs** with characters as nodes and rel
 
 ## 🎯 TO-DO :
 ### Main
-- ! If only one quote
-- Integrate EntityExtractor to CorefResolution
-- Improve graph visualization
+- Better file structure
 - JSON export for Interaction Matrix
+- README user focused
 
 ### Secondary
 - Evaluation
-- Comments
 
 ## ⁉️ Thinking :
-- Multiple identity accuracy
 - Optimization
 
 ---
