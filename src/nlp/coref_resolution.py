@@ -72,11 +72,11 @@ class CorefResolution:
             full_main_name = "_".join(main_name)
             # The first element is the alias used by the coref model
             coref_name = names[0]
-
+            print("Coref nam:", coref_name)
             # Replacing the name used by the coref model with the common name
             for replacement in replacement_history:
                 coref_name = re.sub(rf"\b{re.escape(replacement[0])}\b(?!\w)", replacement[1], coref_name)
-
+            print("After replacement:", coref_name)
             # If the name was detected by the NER
             if main_name:
                 # Now considering only one alias for better NER performances

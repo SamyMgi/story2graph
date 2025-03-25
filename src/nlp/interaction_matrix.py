@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from transformers import pipeline
-from coref_resolution import CorefResolution
+from src.nlp.coref_resolution import CorefResolution
 
 
 class InteractionMatrix:
