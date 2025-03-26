@@ -19,7 +19,7 @@ Visualizing a story as a graph reveals its hidden structure:
 
 ## Current state :
 
-Story2Graph detects characters in a text and determines their relationships (allies, enemies, etc.).
+Story2Graph **detects characters** in a text and determines their **relationships** (allies, enemies, etc.).
 
 ## How does it work ?
 
