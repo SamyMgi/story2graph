@@ -1,7 +1,7 @@
 # 🎯 TO-DO :
 ## Main
-- README
-- Story2Graph file/class.
+- Details "How to use it ?"
+- Details "How does it work"
 - Fix characters part: solo quote problem.
 - JSON export for the graph.
 
