@@ -4,7 +4,7 @@ from fastcoref import spacy_component
 
 
 class CorefResolution:
-    def __init__(self, text, task="coref", model="en_core_web_trf"):
+    def __init__(self, text, model="en_core_web_trf"):
         """
         Performs CorefResolution and NER tasks.
         Args:

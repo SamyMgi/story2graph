@@ -36,7 +36,7 @@ class InteractionMatrix:
         sent_index = 0
         par_index = -1
         # CorefResolution only used for NER task
-        cr = CorefResolution([], task="NER")
+        cr = CorefResolution("")
         # Storing the characters involved in the previous sentence to regroup
         previous_person = []
 
