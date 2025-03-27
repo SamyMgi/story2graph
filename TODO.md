@@ -1,6 +1,5 @@
 # 🎯 TO-DO :
 ## Main
-- Details "How to use it ?"
 - Details "How does it work"
 
 ## Secondary

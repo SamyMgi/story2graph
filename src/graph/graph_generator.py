@@ -46,7 +46,7 @@ class GraphGenerator:
         Generates an interactive HTML visualization of the graph.
         Args:
             path (str): Path to save the graph output.
-            colors_relationship (list[str]): List of colors to be used for edges.
+            colors_relationship (list[str], optional): List of colors to be used for edges.
                     Default: Blue for positive and red for negative.
             bgcolor (str, optional): Background color for the graph.
                     Default: White.

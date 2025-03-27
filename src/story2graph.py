@@ -4,25 +4,31 @@ from src.graph.graph_generator import GraphGenerator
 
 
 class Story2Graph:
-    def __init__(self, input_path):
+    def __init__(self, input_text, path=False):
         """
-        Generate a Graph from an input Story.
+        Generate a graph from an input story.
         Args:
-            input_path (str): Path of the story.
+            input_text (str): Either raw text or a file path containing the story.
+            path (bool, optional): Set to True if `input_text` is a file path,
+                                   otherwise assumes raw text. Default is False.
         """
-        self.input_path = input_path
-        self.text = self._load_text()
+        self.text = self._load_text(input_text) if path else input_text
         self._characters = None
         self._resolved_text = None
         self._im_df = None
 
-    def _load_text(self):
+    @staticmethod
+    def _load_text(input_path):
         """
         Load a text file.
+        Args:
+            input_path (str): Input file path.
+
         Returns:
             text (str): File content convert to string.
+
         """
-        with open(self.input_path, "r", encoding="utf-8") as file:
+        with open(input_path, "r", encoding="utf-8") as file:
             text = file.read().replace('"', "'").replace("\n", " ")
         return text
 
@@ -66,9 +72,3 @@ class Story2Graph:
                 Values range from -1 (bad relationship) to +1 (good relationship).
         """
         return self._im_df
-
-
-s2g = Story2Graph("..\data\cp_episode.txt")
-s2g.generate_graph("..\data\last_test")
-print(s2g.get_coref_resolution())
-print(s2g.get_interaction_matrix())

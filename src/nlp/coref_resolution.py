@@ -9,10 +9,8 @@ class CorefResolution:
         Performs CorefResolution and NER tasks.
         Args:
             text (str): Text to be coref resolved.
-            task (str): Task to be performed ('coref', 'NER').
-                Default: 'coref'.
             model (str, optional): Model to be used for Coref resolution and NER.
-                Default: Spacy transformers.
+                Default: Spacy transformers (using RoBERTa).
         """
         # Coref resolution needs less components when loading the model
         self.nlp = spacy.load(model, exclude=["lemmatizer", "ner", "textcat"])

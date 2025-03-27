@@ -12,7 +12,7 @@ class InteractionMatrix:
             original_doc (spacy.Doc): Original text.
             resolved_doc (spacy.Doc): Coref Resolved text.
             characters (list[str]): Characters list.
-            model (str): Huggingface model to be used for Zero-Shot Learning.
+            model (str, optional): Huggingface model to be used for Zero-Shot Learning.
                 Default: BART.
         """
         self.original_doc = original_doc

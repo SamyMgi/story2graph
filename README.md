@@ -24,7 +24,7 @@ understanding interactions in a narrative.**
       <em>"At his workplace, Neo is pursued by police and Agents led by Agent Smith. Morpheus guides Neo's escape by phone, able to somehow remotely observe their movements, but Neo ultimately surrenders rather than risk a hazardous getaway."</em>
     </td>
     <td style="text-align:center; width:50%;">
-      <img src="img/matrix_sample.png" width="400">
+      <img src="img/matrix_sample.png" width="800">
     </td>
   </tr>
 </table>
@@ -62,5 +62,21 @@ pip install -r requirements.txt
 ### Example of usage
 
 ```python
-  # Import the class
+# Import the class
+from story2graph import Story2Graph
+
+# Example raw story
+story = "At his workplace, Neo is pursued by police and Agents led by Agent Smith. Morpheus guides Neo's escape by phone, able to somehow remotely observe their movements, but Neo ultimately surrenders rather than risk a hazardous getaway."
+
+# Instantiate the class with a story (pass the text directly if path=False, or a file path if path=True)
+s2g = Story2Graph(story, path=False)
+
+# Generate and save the graph as an interactive HTML file at the specified output path
+output_path = "output/graph.html"
+s2g.generate_graph(output_path)
+
+# Optionally, display useful information like the resolved coreference text and interaction matrix
+print("Coref resolved text:", s2g.get_coref_resolution())
+print("Interaction matrix:", s2g.get_interaction_matrix())
+
 ```
